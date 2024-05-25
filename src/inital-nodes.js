@@ -4,7 +4,7 @@ export const nodes = [
   {
     id: "1",
     type: "node",
-    data: { heading: "Send Message", content: "This is text 1" },
+    data: { heading: "Send Message", content: "Name of the Node" },
     position: { x: 50, y: 200 },
   },
 ];

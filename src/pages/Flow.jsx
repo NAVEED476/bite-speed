@@ -4,31 +4,27 @@ import ReactFlow, {
   Background,
   useNodesState,
   useEdgesState,
-  ReactFlowProvider
+  ReactFlowProvider,
 } from "reactflow";
 
 // Components
 import RightBar from "../components/RightBar";
-// import Node from "./CustomeNode/MessageNode";
+import Node from "../components/MessageNode";
 
-// Utils
 import { isAllNodeisConnected } from "../inital-nodes";
-import {
-  nodes as initialNodes,
-  edges as initialEdges
-} from "../inital-nodes";
+import { nodes as initialNodes, edges as initialEdges } from "../inital-nodes";
 
 // Styles
-// import "reactflow/dist/style.css";
-// import "./dnd.css";
-// import "./updatenode.css";
+import "reactflow/dist/style.css";
+import "../styles/dnd.css";
+import "../styles/updatenode.css";
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
 const nodeTypes = { node: Node };
 
-const OverviewFlow = () => {
+const Flow = () => {
   const reactFlowWrapper = useRef(null);
   const textRef = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
@@ -53,13 +49,13 @@ const OverviewFlow = () => {
     console.log(reactFlowInstance, "reactIns");
     const position = reactFlowInstance.project({
       x: event.clientX - reactFlowBounds.left,
-      y: event.clientY - reactFlowBounds.top
+      y: event.clientY - reactFlowBounds.top,
     });
     const newNode = {
       id: getId(),
       type,
       position,
-      data: { heading: "Send Message", content: label }
+      data: { heading: "Send Message", content: label },
     };
     setNodes((es) => es.concat(newNode));
     setSelectedNode(newNode.id);
@@ -99,7 +95,7 @@ const OverviewFlow = () => {
         if (node.id === selectedNode?.id) {
           node.data = {
             ...node.data,
-            content: nodeName || " "
+            content: nodeName || " ",
           };
         }
         return node;
@@ -146,4 +142,4 @@ const OverviewFlow = () => {
   );
 };
 
-export default OverviewFlow;
+export default Flow;
