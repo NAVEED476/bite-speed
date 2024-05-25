@@ -1,8 +1,7 @@
 import React from "react";
+import EditMessage from "./EditMessage";
 
-import EditMessage from "./EditMessage"
-
-export default ({ isSelected, textRef, nodeName, setNodeName }) => {
+const RightBar = ({ isSelected, textRef, nodeName, setNodeName }) => {
   const onDragStart = (event, nodeType, content) => {
     event.dataTransfer.setData("application/reactflow", nodeType);
     event.dataTransfer.setData("content", content);
@@ -12,11 +11,7 @@ export default ({ isSelected, textRef, nodeName, setNodeName }) => {
   return (
     <aside>
       {isSelected ? (
-        <EditMessage
-          textRef={textRef}
-          nodeName={nodeName}
-          setNodeName={setNodeName}
-        />
+        <EditMessage textRef={textRef} nodeName={nodeName} setNodeName={setNodeName} />
       ) : (
         <div
           className="dndnode input"
@@ -29,3 +24,5 @@ export default ({ isSelected, textRef, nodeName, setNodeName }) => {
     </aside>
   );
 };
+
+export default RightBar;

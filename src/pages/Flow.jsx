@@ -6,15 +6,10 @@ import ReactFlow, {
   useEdgesState,
   ReactFlowProvider,
 } from "reactflow";
-
-// Components
 import RightBar from "../components/RightBar";
 import Node from "../components/MessageNode";
-
 import { isAllNodeisConnected } from "../inital-nodes";
 import { nodes as initialNodes, edges as initialEdges } from "../inital-nodes";
-
-// Styles
 import "reactflow/dist/style.css";
 import "../styles/dnd.css";
 import "../styles/updatenode.css";
@@ -33,7 +28,7 @@ const Flow = () => {
   const [selectedNode, setSelectedNode] = useState(null);
   const [isSelected, setIsSelected] = useState(false);
 
-  const onInit = (reactFlowInstance) => setReactFlowInstance(reactFlowInstance);
+  const onInit = (instance) => setReactFlowInstance(instance);
 
   const onDragOver = (event) => {
     event.preventDefault();
@@ -43,60 +38,51 @@ const Flow = () => {
   const onDrop = (event) => {
     event.preventDefault();
     const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-
     const type = event.dataTransfer.getData("application/reactflow");
     const label = event.dataTransfer.getData("content");
-    console.log(reactFlowInstance, "reactIns");
+
     const position = reactFlowInstance.project({
       x: event.clientX - reactFlowBounds.left,
       y: event.clientY - reactFlowBounds.top,
     });
+
     const newNode = {
       id: getId(),
       type,
       position,
       data: { heading: "Send Message", content: label },
     };
-    setNodes((es) => es.concat(newNode));
+
+    setNodes((nds) => nds.concat(newNode));
     setSelectedNode(newNode.id);
   };
+
   const onConnect = useCallback(
-    (params) =>
-      setEdges((eds) =>
-        addEdge({ ...params, markerEnd: { type: "arrowclosed" } }, eds)
-      ),
+    (params) => setEdges((eds) => addEdge({ ...params, markerEnd: { type: "arrowclosed" } }, eds)),
     [setEdges]
   );
 
   const [nodeName, setNodeName] = useState("Node 1");
 
   useEffect(() => {
-    const node = nodes.filter((node) => {
-      if (node.selected) return true;
-      return false;
-    });
-    if (node[0]) {
-      setSelectedNode(node[0]);
-      setIsSelected(true);
-    } else {
-      setSelectedNode("");
-      setIsSelected(false);
-    }
+    const selected = nodes.find((node) => node.selected);
+    setSelectedNode(selected || null);
+    setIsSelected(!!selected);
   }, [nodes]);
+
   useEffect(() => {
-    setNodeName(selectedNode?.data?.content || selectedNode);
+    setNodeName(selectedNode?.data?.content || "");
   }, [selectedNode]);
+
   useEffect(() => {
-    textRef?.current?.focus();
+    if (selectedNode) textRef?.current?.focus();
   }, [selectedNode]);
+
   useEffect(() => {
     setNodes((nds) =>
       nds.map((node) => {
         if (node.id === selectedNode?.id) {
-          node.data = {
-            ...node.data,
-            content: nodeName || " ",
-          };
+          node.data = { ...node.data, content: nodeName || " " };
         }
         return node;
       })
@@ -104,8 +90,11 @@ const Flow = () => {
   }, [nodeName, setNodes]);
 
   const saveHandler = () => {
-    if (isAllNodeisConnected(nodes, edges)) alert("Congrats its correct");
-    else alert("Please connect source nodes (Cannot Save Flow)");
+    if (isAllNodeisConnected(nodes, edges)) {
+      alert("Congrats! The flow is correct.");
+    } else {
+      alert("Please connect all source nodes (Cannot Save Flow).");
+    }
   };
 
   return (
@@ -129,7 +118,6 @@ const Flow = () => {
               <Background color="#aaa" gap={16} />
             </ReactFlow>
           </div>
-
           <RightBar
             isSelected={isSelected}
             textRef={textRef}

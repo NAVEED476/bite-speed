@@ -15,25 +15,16 @@ export const edges = [
     source: "1",
     target: "2",
     label: "this is an edge label",
-    markerEnd: {
-      type: MarkerType.ArrowClosed,
-    },
+    markerEnd: { type: MarkerType.ArrowClosed },
   },
 ];
 
-
 export function isAllNodeisConnected(nodes, edges) {
-    console.log(nodes, edges, "is");
-    const allNodesIds = nodes.map((node) => node.id);
-    const allSourceEdges = edges.map((edge) => edge.source);
-    let count = 0;
-    for (let i = 0; i < allNodesIds.length; i++) {
-      if (!allSourceEdges.includes(allNodesIds[i])) count++;
-    }
-    console.log(allNodesIds, allSourceEdges);
-    if (count >= 2) {
-      return false;
-    }
-    return true;
+  const allNodesIds = nodes.map((node) => node.id);
+  const allSourceEdges = edges.map((edge) => edge.source);
+  let count = 0;
+  for (let i = 0; i < allNodesIds.length; i++) {
+    if (!allSourceEdges.includes(allNodesIds[i])) count++;
   }
-  
+  return count < 2;
+}
